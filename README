@@ -1,0 +1,73 @@
+phpTempReader - reading temperatures from sensors and put them in arrays.
+    Copyright (C) 2017  Ole-Henrik Jakobsen
+
+
+Software requirements:
+	php-cli			To run PHP code at command line interface
+
+
+-----------------------------------------------------------------------------------------------------------
+ Supported sensors:	| Information:
+-----------------------------------------------------------------------------------------------------------
+	Dummy		|	For testing purposes, based upon DS18B20
+-----------------------------------------------------------------------------------------------------------
+	DS18B20		|	DS18B20 sensors and similar like DS18S20
+			|	
+			|	Sensor installation:
+			|		To install and enable the sensors you need to add dtoverlay=w1-gpio in the boot config:
+			|			automatic:
+			|				sudo bash -c 'printf "\n#Enable GPIO\ndtoverlay=w1-gpio" >> /boot/config.txt'
+			|			manual:
+			|				sudo nano /boot/config.txt
+			|				enter this at the bottom:
+			|					dtoverlay=w1-gpio
+			|				and save the file (ctrl+o <enter>) and then exit (ctrl+x).
+			|				Reboot the system.
+			|			
+			|		To enable the sensor(s) after a boot, you must either run (root permission is required):
+			|			sudo modprobe w1-gpio
+			|			sudo modprobe w1-therm
+			|		or, add the modules for automatic load at startup:
+			|			automatic:
+			|				sudo bash -c 'printf "\nw1-gpio\nw1-therm" >> /etc/modules'
+			|			manual:
+			|				sudo nano /etc/modules
+			|				enter this at the bottom:
+			|					w1-gpio
+			|					w1-therm
+			|				and save the file (ctrl+o <enter>) and then exit (ctrl+x).
+			|
+-----------------------------------------------------------------------------------------------------------
+
+Configuration of phpTempReader:
+	Choose type of sensor(s) to include and also enable and disable the test mode.
+	Config file: config.ini
+
+
+Configuration of sensors:
+	Usually you don't have to configure anything unless you want the sensors to output in a specific order,
+	or if you want to choose less amount of sensors than listed/available.
+
+
+Use phpTempReader:
+	CLI:
+		cd /path/to/tempreader
+		php tempreader.php [sensor]
+	
+	PHP:
+		$path = "/path/to/tempreader";
+		chdir($path);
+		include_once("" . $path . "/tempreader.php");
+
+
+Use phpTempReader function:
+	$newArr = tempreader(int $combine = 0);
+	Output (array):
+		$newArr["sensortype"]["unit"]
+		$newArr["sensortype"]["serialnumber"]
+		$newArr["sensortype"]["temperature"]
+	
+	or if $combine is set: $newArr = tempreader(1);
+		$newArr["sensortype"]["unit"]
+		$newArr["sensortype"]["data"]
+	
