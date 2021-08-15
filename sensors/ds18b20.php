@@ -23,7 +23,7 @@
 
 	Configure the sensor in the config.ini file.
 	
-	Last updated: 2020-12-25
+	Last updated: 2021-08-15
 */
 // start the code
 $tempreader = false;
@@ -61,7 +61,7 @@ for($i=0;$i<$serial_length;$i++) {
 		$sensorfile = "" . $sensor_directory . "/" . $ds18b20_serial_array[$i] . "/w1_slave";
 		
 		// reset for next sensor
-		$rawtemp = "";
+		$rawtemp = [];
 		$ds18b20_yes = 0;
 		
 		for($isub=0;$isub<$ds18b20_retry;$isub++) {
