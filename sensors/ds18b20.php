@@ -1,7 +1,7 @@
 <?php
 /*
     phpTempReader - reading temperatures from sensors and put them in arrays and variables.
-    Copyright (C) 2017-2020  Ole-Henrik Jakobsen
+    Copyright (C) 2017-2022  Ole-Henrik Jakobsen
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 	Configure the sensor in the config.ini file.
 	
-	Last updated: 2021-08-15
+	Last updated: 2022-08-09
 */
 // start the code
 $tempreader = false;
@@ -31,7 +31,7 @@ $sensor_name = "DS18B20";
 $sensor_name_lwr = strtolower($sensor_name);
 $sensor_directory = "/sys/bus/w1/devices";
 if(!is_dir($sensor_directory)) {
-	die("\nError [" . $sensor_name . "]: Can't find any sensors. Plase check the sensors, cable connections and that kernel modules are loaded.\n\n");
+	die("\nError [" . $sensor_name . "]: Can't find any sensors. Please check the configuration file, kernel modules, sensors and cable connection.\n\n");
 }
 
 // put array data into variables
@@ -56,12 +56,15 @@ $ds18b20_temp_array = array();
 
 // get temperature(s) from sensor(s)
 $serial_length = count($ds18b20_serial_array);
+if($serial_length < 1) {
+	die("\nError [" . $sensor_name . "]: Can't find any sensors. Please check the configuration file, kernel modules, sensors and cable connection.\n\n");
+}
 for($i=0;$i<$serial_length;$i++) {
 	if(preg_match("/^(10|22|28)-[0-9a-f]{12}/", $ds18b20_serial_array[$i])) { // check if the file matches the serial number of DS18B20 sensors, else skip to next.
 		$sensorfile = "" . $sensor_directory . "/" . $ds18b20_serial_array[$i] . "/w1_slave";
 		
 		// reset for next sensor
-		$rawtemp = [];
+		$rawtemp = "";
 		$ds18b20_yes = 0;
 		
 		for($isub=0;$isub<$ds18b20_retry;$isub++) {
@@ -113,6 +116,6 @@ else if(!$test && $ds18b20_unit && array_key_exists(0, $ds18b20_temp_array)) {
 	$tempreader = true;
 }
 else {
-	die("\nError [" . $sensor_name . "]: please check the configuration file and fill out everything missing.\n\n");
+	die("\nError [" . $sensor_name . "]: Can't find any sensors. Please check the configuration file, kernel modules, sensors and cable connection.\n\n");
 }
 ?>
