@@ -56,9 +56,7 @@ $ds18b20_temp_array = array();
 
 // get temperature(s) from sensor(s)
 $serial_length = count($ds18b20_serial_array);
-if($serial_length < 1) {
-	die("\nError [" . $sensor_name . "]: Can't find any sensors. Please check the configuration file, kernel modules, sensors and cable connection.\n\n");
-}
+
 for($i=0;$i<$serial_length;$i++) {
 	if(preg_match("/^(10|22|28)-[0-9a-f]{12}/", $ds18b20_serial_array[$i])) { // check if the file matches the serial number of DS18B20 sensors, else skip to next.
 		$sensorfile = "" . $sensor_directory . "/" . $ds18b20_serial_array[$i] . "/w1_slave";
